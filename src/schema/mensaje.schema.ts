@@ -1,0 +1,42 @@
+import { z } from "zod";
+
+// 📩 Schema de un solo mensaje adaptado al backend real
+export const MensajeSchema = z.object({
+  _id: z.string().optional(), // MongoDB _id
+  numero: z
+    .string()
+    .min(8, "El número debe tener al menos 8 caracteres")
+    .max(15, "El número no debe exceder los 15 caracteres"),
+  mensaje: z
+    .string()
+    .min(1, "El mensaje no puede estar vacío")
+    .max(5000, "El mensaje no debe exceder los 5000 caracteres"),
+  tipo: z.enum(["texto", "imagen", "audio"], {
+    errorMap: () => ({
+      message: "El tipo debe ser 'texto', 'imagen' o 'audio'",
+    }),
+  }),
+  emisor: z.string().optional(),
+  mediaUrl: z.string().url().nullable().optional(),
+  mediaMimeType: z.string().nullable().optional(),
+  timestamp: z.string().datetime().optional(),
+  __v: z.number().optional(),
+});
+
+// 🗃️ Lista de mensajes
+export const MensajeListSchema = z
+  .array(MensajeSchema)
+  .min(1, "Debe haber al menos un mensaje");
+
+// 📝 Schema para crear mensaje (cliente → servidor)
+export const MensajeCreateSchema = MensajeSchema.omit({
+  _id: true,
+  __v: true,
+  timestamp: true,
+  emisor: true,
+});
+
+// ✅ Tipos exportables
+export type Mensaje = z.infer<typeof MensajeSchema>;
+export type MensajeCreate = z.infer<typeof MensajeCreateSchema>;
+export type MensajeList = z.infer<typeof MensajeListSchema>;
