@@ -1,26 +1,44 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
-import { sendMensaje } from "@/app/actions/send-mensaje-action";
+import { socket } from "@/utils/socket";
+import { useRef, useState } from "react";
 
 export default function ChatInputForm({ numero }: { numero: string }) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, dispatch, isPending] = useActionState(sendMensaje, {
-    errors: [],
-    success: "",
-  });
+  const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (state.success && formRef.current) {
-      formRef.current.reset();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setIsSending(true);
+
+    const formData = new FormData(formRef.current!);
+    const mensaje = formData.get("mensaje")?.toString().trim();
+
+    if (!mensaje) {
+      setError("El mensaje no puede estar vacío");
+      setIsSending(false);
+      return;
     }
-  }, [state]);
+
+    // Emitir por socket
+    socket.emit("enviar-mensaje", {
+      numero,
+      mensaje,
+      emisor: "admin",
+      tipo: "texto",
+    });
+
+    // Limpiar
+    formRef.current?.reset();
+    setIsSending(false);
+  };
 
   return (
     <form
       ref={formRef}
-      noValidate
-      action={dispatch}
+      onSubmit={handleSubmit}
       className="flex items-center gap-2 p-4 border-t bg-white"
     >
       <input type="hidden" name="numero" value={numero} />
@@ -32,11 +50,12 @@ export default function ChatInputForm({ numero }: { numero: string }) {
       />
       <button
         type="submit"
-        disabled={isPending}
+        disabled={isSending}
         className="bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600"
       >
-        {isPending ? "Enviando..." : "Enviar"}
+        {isSending ? "Enviando..." : "Enviar"}
       </button>
+      {error && <div className="text-red-500 text-sm">{error}</div>}
     </form>
   );
 }
