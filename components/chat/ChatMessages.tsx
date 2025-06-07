@@ -1,16 +1,37 @@
+"use client";
+import { useEffect, useRef } from "react";
 import { Mensaje } from "@/src/schema/mensaje.schema";
 
-interface ChatMessagesProps {
+interface Props {
   mensajes: Mensaje[];
   numero: string | null;
   adminNumero: string;
 }
 
-export default function ChatMessages({
-  mensajes,
-  numero,
-  adminNumero,
-}: ChatMessagesProps) {
+export default function ChatMessages({ mensajes, numero }: Props) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const mensajesOrdenados = [...mensajes].sort(
+    (a, b) =>
+      new Date(a.timestamp ?? "").getTime() -
+      new Date(b.timestamp ?? "").getTime()
+  );
+
+  // useEffect(() => {
+  //   const chatContainer = scrollRef.current?.parentElement;
+  //   if (!chatContainer) return;
+
+  //   const isNearBottom =
+  //     chatContainer.scrollHeight -
+  //       chatContainer.scrollTop -
+  //       chatContainer.clientHeight <
+  //     100;
+
+  //   if (isNearBottom) {
+  //     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // }, [mensajes]);
+
   if (!numero) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50 text-gray-400">
@@ -24,11 +45,12 @@ export default function ChatMessages({
       <div className="text-center text-gray-500 mb-4">
         Conversación con {numero}
       </div>
-      {mensajes.map((msg) => {
+
+      {mensajesOrdenados.map((msg) => {
         const esAdmin = msg.emisor === "admin";
         return (
           <div
-            key={msg._id}
+            key={`${msg._id}-${msg.timestamp}`} // 🟢 clave compuesta única
             className={`max-w-xs p-2 mb-2 rounded-lg text-sm ${
               esAdmin
                 ? "bg-cyan-100 self-end text-right"
@@ -36,14 +58,16 @@ export default function ChatMessages({
             }`}
           >
             <div>{msg.mensaje}</div>
-            {msg.timestamp ? (
+            {msg.timestamp && (
               <div className="text-[10px] text-gray-400 mt-1">
-                {new Date(msg.timestamp).toLocaleString()}
+                {new Date(msg.timestamp).toLocaleString("es-CL")}
               </div>
-            ) : null}
+            )}
           </div>
         );
       })}
+
+      <div ref={scrollRef} />
     </main>
   );
 }

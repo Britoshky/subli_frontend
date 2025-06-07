@@ -17,7 +17,7 @@ export async function sendMensaje(
   const mensajeNuevo = {
     numero: formData.get("numero")?.toString() || "",
     emisor: "admin", // <- explícitamente tú
-    tipo: "texto", // <-- requerido por el schema
+    tipo: "text", // <-- requerido por el schema
     mensaje: formData.get("mensaje")?.toString() || "",
   };
 

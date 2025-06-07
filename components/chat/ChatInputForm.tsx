@@ -1,14 +1,19 @@
 "use client";
 
-import { socket } from "@/utils/socket";
 import { useRef, useState } from "react";
+import type { Socket } from "socket.io-client";
 
-export default function ChatInputForm({ numero }: { numero: string }) {
+interface Props {
+  numero: string;
+  socket: Socket;
+}
+
+export default function ChatInputForm({ numero, socket }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setIsSending(true);
@@ -22,25 +27,19 @@ export default function ChatInputForm({ numero }: { numero: string }) {
       return;
     }
 
-    // Emitir por socket
     socket.emit("enviar-mensaje", {
       numero,
       mensaje,
       emisor: "admin",
-      tipo: "texto",
+      tipo: "text",
     });
 
-    // Limpiar
     formRef.current?.reset();
     setIsSending(false);
   };
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      className="flex items-center gap-2 p-4 border-t bg-white"
-    >
+    <form ref={formRef} onSubmit={handleSubmit} className="flex gap-2 p-4 border-t bg-white">
       <input type="hidden" name="numero" value={numero} />
       <input
         name="mensaje"

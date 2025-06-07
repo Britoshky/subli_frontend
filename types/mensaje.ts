@@ -1,5 +1,5 @@
 export type Emisor = "admin" | "cliente";
-export type TipoMensaje = "texto" | "imagen" | "audio";
+export type TipoMensaje = "text" | "imagen" | "audio";
 
 export interface Mensaje {
   numero: string;

@@ -11,9 +11,9 @@ export const MensajeSchema = z.object({
     .string()
     .min(1, "El mensaje no puede estar vacío")
     .max(5000, "El mensaje no debe exceder los 5000 caracteres"),
-  tipo: z.enum(["texto", "imagen", "audio"], {
+  tipo: z.enum(["text", "imagen", "audio"], {
     errorMap: () => ({
-      message: "El tipo debe ser 'texto', 'imagen' o 'audio'",
+      message: "El tipo debe ser 'text', 'imagen' o 'audio'",
     }),
   }),
   emisor: z.string().optional(),
@@ -21,12 +21,11 @@ export const MensajeSchema = z.object({
   mediaMimeType: z.string().nullable().optional(),
   timestamp: z.string().datetime().optional(),
   __v: z.number().optional(),
+  leido: z.boolean().optional(), // ✅ Agregado aquí
 });
 
 // 🗃️ Lista de mensajes
-export const MensajeListSchema = z
-  .array(MensajeSchema)
-  .min(1, "Debe haber al menos un mensaje");
+export const MensajeListSchema = z.array(MensajeSchema); // sin restricción mínima
 
 // 📝 Schema para crear mensaje (cliente → servidor)
 export const MensajeCreateSchema = MensajeSchema.omit({

@@ -18,7 +18,6 @@ export const getAllMensajes = cache(async () => {
   });
 
   const json = await req.json();
-
   const mensajes = MensajeListSchema.parse(json);
 
 
