@@ -70,13 +70,19 @@ export default function ChatMessages({ mensajes, numero, onBack }: Props) {
             >
               <div>
                 {msg.tipo === "audio" && msg.mediaUrl ? (
-                  <audio controls className="w-full">
-                    <source
-                      src={imagenUrl}
-                      type={msg.mediaMimeType || "audio/ogg"}
-                    />
-                    Tu navegador no soporta audio.
-                  </audio>
+                  <div className="flex items-center gap-3 rounded-full bg-white border px-3 py-2 max-w-[520px] shadow-sm">
+                    <audio
+                      controls
+                      className="w-screen"
+                      style={{ outline: "none", borderRadius: "10px" }}
+                    >
+                      <source
+                        src={imagenUrl}
+                        type={msg.mediaMimeType || "audio/ogg"}
+                      />
+                      Tu navegador no soporta audio.
+                    </audio>
+                  </div>
                 ) : msg.tipo === "image" && imagenUrl ? (
                   <img
                     src={imagenUrl}
