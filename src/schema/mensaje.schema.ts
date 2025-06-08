@@ -10,9 +10,9 @@ export const MensajeSchema = z.object({
   mensaje: z
     .string()
     .nullable(),
-  tipo: z.enum(["text", "imagen", "audio"], {
+  tipo: z.enum(["text", "image", "audio"], {
     errorMap: () => ({
-      message: "El tipo debe ser 'text', 'imagen' o 'audio'",
+      message: "El tipo debe ser 'text', 'image' o 'audio'",
     }),
   }),
   emisor: z.string().optional(),

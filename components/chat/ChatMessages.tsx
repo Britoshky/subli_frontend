@@ -71,10 +71,17 @@ export default function ChatMessages({ mensajes, numero }: Props) {
                   />
                   Tu navegador no soporta la reproducción de audio.
                 </audio>
+              ) : msg.tipo === "image" && msg.mediaUrl ? (
+                <img
+                  src={msg.mediaUrl}
+                  alt="imagen enviada"
+                  className="max-w-full rounded-md"
+                />
               ) : (
                 msg.mensaje
               )}
             </div>
+
             {msg.timestamp && (
               <div className="text-[10px] text-gray-400 mt-1">
                 {new Date(msg.timestamp).toLocaleString("es-CL")}

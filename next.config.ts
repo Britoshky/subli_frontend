@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   experimental: {
     typedRoutes: true,
+    serverActions: {
+      bodySizeLimit: "50mb", // o el tamaño que necesites, como "50mb"
+    },
   },
   images: {
     remotePatterns: [
