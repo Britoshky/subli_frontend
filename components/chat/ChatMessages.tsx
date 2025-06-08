@@ -13,24 +13,13 @@ export default function ChatMessages({ mensajes, numero }: Props) {
 
   const mensajesOrdenados = [...mensajes].sort(
     (a, b) =>
-      new Date(a.timestamp ?? "").getTime() -
-      new Date(b.timestamp ?? "").getTime()
+      new Date(a.timestamp ?? "").getTime() - new Date(b.timestamp ?? "").getTime()
   );
 
-  // useEffect(() => {
-  //   const chatContainer = scrollRef.current?.parentElement;
-  //   if (!chatContainer) return;
-
-  //   const isNearBottom =
-  //     chatContainer.scrollHeight -
-  //       chatContainer.scrollTop -
-  //       chatContainer.clientHeight <
-  //     100;
-
-  //   if (isNearBottom) {
-  //     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  //   }
-  // }, [mensajes]);
+  useEffect(() => {
+    // Scroll automático siempre que cambien los mensajes
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [mensajes, numero]); // 👈 se agrega `numero` para que funcione al cambiar de conversación
 
   if (!numero) {
     return (
@@ -50,7 +39,7 @@ export default function ChatMessages({ mensajes, numero }: Props) {
         const esAdmin = msg.emisor === "admin";
         return (
           <div
-            key={`${msg._id}-${msg.timestamp}`} // 🟢 clave compuesta única
+            key={`${msg._id}-${msg.timestamp}`}
             className={`max-w-xs p-2 mb-2 rounded-lg text-sm ${
               esAdmin
                 ? "bg-cyan-100 self-end text-right"
@@ -62,10 +51,7 @@ export default function ChatMessages({ mensajes, numero }: Props) {
                 <audio controls>
                   <source
                     src={msg.mediaUrl
-                      .replace(
-                        "C:\\subli\\subli-frontend\\public",
-                        "https://subli.cl"
-                      )
+                      .replace("C:\\subli\\subli-frontend\\public", "https://subli.cl")
                       .replace(/\\/g, "/")}
                     type={msg.mediaMimeType || "audio/ogg"}
                   />
@@ -74,10 +60,7 @@ export default function ChatMessages({ mensajes, numero }: Props) {
               ) : msg.tipo === "image" && msg.mediaUrl ? (
                 <img
                   src={msg.mediaUrl
-                    .replace(
-                      "C:\\subli\\subli-frontend\\public",
-                      "https://subli.cl"
-                    )
+                    .replace("C:\\subli\\subli-frontend\\public", "https://subli.cl")
                     .replace(/\\/g, "/")}
                   alt="imagen enviada"
                   className="max-w-full rounded-md"

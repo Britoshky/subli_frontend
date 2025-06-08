@@ -1,16 +1,23 @@
 import { Toaster } from "@/components/ui/sonner"
 
-export default async function AuthLayout({
+// app/auth/layout.tsx
+export default function AuthLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-
+}) {
   return (
-    <>
-      <div>{children}</div>
+    <html lang="es">
+      <body className="h-screen flex items-center justify-center bg-gray-50">
+        {children}
 
-      <Toaster toastOptions={{ className: "sonner-toast" }} />       
-    </>
+        {/* Si quieres notificaciones solo en auth */}
+        <div id="auth-toaster">
+          {/* Puedes incluir el Toaster aquí si es necesario */}
+                <Toaster toastOptions={{ className: "sonner-toast" }} />       
+
+        </div>
+      </body>
+    </html>
   );
 }

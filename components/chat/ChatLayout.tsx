@@ -94,25 +94,25 @@ export default function ChatLayout({
   }, [numeroSeleccionado, socket]);
 
   return (
-    <div className="flex h-screen border-t">
-      <ChatSidebar
-        conversaciones={conversaciones}
-        onSelect={setNumeroSeleccionado}
-        numeroSeleccionado={numeroSeleccionado}
-        mensajesNoLeidos={mensajesNoLeidos}
+  <div className="flex h-screen border-t"> {/* <== CAMBIADO */}
+    <ChatSidebar
+      conversaciones={conversaciones}
+      onSelect={setNumeroSeleccionado}
+      numeroSeleccionado={numeroSeleccionado}
+      mensajesNoLeidos={mensajesNoLeidos}
+    />
+    <div className="flex flex-col flex-1 bg-gray-50 overflow-hidden"> {/* overflow para evitar scroll general */}
+      <ChatMessages
+        mensajes={
+          numeroSeleccionado ? conversaciones[numeroSeleccionado] : []
+        }
+        adminNumero={adminNumero}
+        numero={numeroSeleccionado}
       />
-      <div className="flex flex-col flex-1 bg-gray-50">
-        <ChatMessages
-          mensajes={
-            numeroSeleccionado ? conversaciones[numeroSeleccionado] : []
-          }
-          adminNumero={adminNumero}
-          numero={numeroSeleccionado}
-        />
-        {numeroSeleccionado && socket && (
-          <ChatInputForm numero={numeroSeleccionado} socket={socket} />
-        )}
-      </div>
+      {numeroSeleccionado && socket && (
+        <ChatInputForm numero={numeroSeleccionado} socket={socket} />
+      )}
     </div>
-  );
+  </div>
+);
 }
