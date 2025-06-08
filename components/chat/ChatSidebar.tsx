@@ -21,17 +21,30 @@ export default function ChatSidebar({
   const [busqueda, setBusqueda] = useState("");
 
   const conversacionesOrdenadas = Object.entries(conversaciones)
-    .sort((a, b) => {
-      const ultimaA = a[1].at(-1)?.timestamp ?? "";
-      const ultimaB = b[1].at(-1)?.timestamp ?? "";
-      return new Date(ultimaB).getTime() - new Date(ultimaA).getTime();
+    .map(([numero, mensajes]) => {
+      const ultimo = [...mensajes].sort(
+        (a, b) =>
+          new Date(b.timestamp ?? "").getTime() -
+          new Date(a.timestamp ?? "").getTime()
+      )[0];
+
+      return {
+        numero,
+        ultimoMensaje: ultimo,
+        mensajes,
+      };
     })
-    .filter(([numero]) =>
-      numero.toLowerCase().includes(busqueda.trim().toLowerCase())
+    .sort((a, b) =>
+      new Date(b.ultimoMensaje?.timestamp ?? "").getTime() -
+      new Date(a.ultimoMensaje?.timestamp ?? "").getTime()
+    )
+    .filter((c) =>
+      c.numero.toLowerCase().includes(busqueda.trim().toLowerCase())
     );
 
   return (
-    <div className="flex flex-col h-full bg-white sm:w-72 w-full">
+    <div className="flex flex-col h-full border-r bg-white sm:w-72 w-full">
+      {/* 🔍 Buscador */}
       <div className="p-3 border-b">
         <Input
           type="text"
@@ -42,25 +55,16 @@ export default function ChatSidebar({
         />
       </div>
 
+      {/* 📜 Lista de chats */}
       <div className="flex-1 overflow-y-auto">
         {conversacionesOrdenadas.length === 0 ? (
           <div className="text-center text-sm text-gray-400 mt-4">
             No hay conversaciones
           </div>
         ) : (
-          conversacionesOrdenadas.map(([numero, msgs]) => {
-            const ultimoMensaje = msgs.at(-1);
+          conversacionesOrdenadas.map(({ numero, ultimoMensaje }) => {
             const cantidadNoLeidos = mensajesNoLeidos[numero] || 0;
             const activo = numero === numeroSeleccionado;
-
-            let vistaPrevia = "";
-            if (ultimoMensaje?.tipo === "text") {
-              vistaPrevia = ultimoMensaje.mensaje ?? "";
-            } else if (ultimoMensaje?.tipo === "image") {
-              vistaPrevia = "📷 Imagen enviada";
-            } else if (ultimoMensaje?.tipo === "audio") {
-              vistaPrevia = "🎤 Audio enviado";
-            }
 
             return (
               <div
@@ -68,7 +72,9 @@ export default function ChatSidebar({
                 role="button"
                 tabIndex={0}
                 onClick={() => onSelect(numero)}
-                onKeyDown={(e) => e.key === "Enter" && onSelect(numero)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") onSelect(numero);
+                }}
                 className={`cursor-pointer px-4 py-3 border-b transition-colors select-none ${
                   activo ? "bg-gray-100" : "hover:bg-gray-50"
                 }`}
@@ -90,7 +96,11 @@ export default function ChatSidebar({
                 </div>
 
                 <div className="text-xs text-gray-500 truncate mt-1">
-                  {vistaPrevia}
+                  {ultimoMensaje?.tipo === "image"
+                    ? "📸 Imagen"
+                    : ultimoMensaje?.tipo === "audio"
+                    ? "🎤 Audio"
+                    : ultimoMensaje?.mensaje || "📎 Archivo"}
                 </div>
               </div>
             );
