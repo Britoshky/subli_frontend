@@ -96,54 +96,60 @@ export default function ChatInputForm({ numero, socket }: Props) {
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className="sticky bottom-0 left-0 right-0 z-30 bg-white border-t px-4 py-2 flex flex-col gap-2 sm:flex-row items-end"
+      className="sticky bottom-0 left-0 right-0 z-30 bg-white border-t px-4 py-3"
       encType="multipart/form-data"
     >
-      <div className="flex-1 flex flex-col gap-1 w-full">
-        <textarea
-          name="mensaje"
-          placeholder="Escribe algo o adjunta una imagen..."
-          className="w-full rounded-md border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-cyan-500"
-          rows={2}
-        />
+      <div className="flex flex-col sm:flex-row items-end gap-2">
+        <div className="flex-1 flex flex-col gap-1">
+          <textarea
+            name="mensaje"
+            placeholder="Escribe algo o adjunta una imagen..."
+            className="w-full rounded-md border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            rows={2}
+          />
 
-        {previewUrl && (
-          <div className="relative w-fit mt-2">
-            <img
-              src={previewUrl}
-              alt="Preview"
-              className="max-w-xs rounded-md border"
-            />
-            <button
-              onClick={() => setPreviewUrl(null)}
-              type="button"
-              className="absolute top-1 right-1 bg-white rounded-full shadow p-1"
-            >
-              <X className="w-4 h-4 text-red-500" />
-            </button>
-          </div>
-        )}
-      </div>
+          {previewUrl && (
+            <div className="relative w-fit mt-2">
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="max-w-xs rounded-md border"
+              />
+              <button
+                onClick={() => setPreviewUrl(null)}
+                type="button"
+                className="absolute top-1 right-1 bg-white rounded-full shadow p-1"
+              >
+                <X className="w-4 h-4 text-red-500" />
+              </button>
+            </div>
+          )}
+        </div>
 
-      <div className="flex flex-col sm:flex-row items-center gap-1 sm:ml-2">
-        <label htmlFor="archivo" className="cursor-pointer text-xs text-gray-600 hover:text-cyan-700">
-          <Paperclip className="w-5 h-5" />
-        </label>
-        <Input
-          type="file"
-          id="archivo"
-          name="archivo"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        <Button
-          type="submit"
-          disabled={isSending}
-          className="flex items-center gap-1"
-        >
-          {isSending ? "Enviando..." : <><Send className="w-4 h-4" />Enviar</>}
-        </Button>
+        <div className="flex gap-2 items-center justify-end w-full sm:w-auto">
+          <label
+            htmlFor="archivo"
+            className="p-2 bg-gray-100 rounded-md cursor-pointer hover:bg-gray-200"
+          >
+            <Paperclip className="w-5 h-5 text-gray-700" />
+          </label>
+          <Input
+            type="file"
+            id="archivo"
+            name="archivo"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+
+          <Button
+            type="submit"
+            disabled={isSending}
+            className="flex items-center gap-1"
+          >
+            {isSending ? "Enviando..." : <><Send className="w-4 h-4" /> Enviar</>}
+          </Button>
+        </div>
       </div>
 
       {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
