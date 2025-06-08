@@ -38,7 +38,8 @@ export default function ChatMessages({ mensajes, numero, onBack }: Props) {
     <>
       <main className="flex-1 flex flex-col bg-gray-50 p-4 overflow-y-auto">
         {/* Encabezado móvil */}
-        <div className="sm:hidden flex items-center gap-2 mb-4 px-1">
+        {/* Encabezado móvil flotante */}
+        <div className="sm:hidden sticky top-0 z-20 bg-white/90 backdrop-blur flex items-center gap-2 px-4 py-2 border-b">
           {onBack && (
             <button
               onClick={onBack}
