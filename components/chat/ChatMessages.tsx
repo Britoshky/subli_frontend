@@ -57,7 +57,24 @@ export default function ChatMessages({ mensajes, numero }: Props) {
                 : "bg-white border self-start"
             }`}
           >
-            <div>{msg.mensaje}</div>
+            <div>
+              {msg.tipo === "audio" && msg.mediaUrl ? (
+                <audio controls>
+                  <source
+                    src={msg.mediaUrl
+                      .replace(
+                        "C:\\subli\\subli-frontend\\public",
+                        "https://subli.cl"
+                      )
+                      .replace(/\\/g, "/")}
+                    type={msg.mediaMimeType || "audio/ogg"}
+                  />
+                  Tu navegador no soporta la reproducción de audio.
+                </audio>
+              ) : (
+                msg.mensaje
+              )}
+            </div>
             {msg.timestamp && (
               <div className="text-[10px] text-gray-400 mt-1">
                 {new Date(msg.timestamp).toLocaleString("es-CL")}

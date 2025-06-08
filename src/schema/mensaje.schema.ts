@@ -9,8 +9,7 @@ export const MensajeSchema = z.object({
     .max(15, "El número no debe exceder los 15 caracteres"),
   mensaje: z
     .string()
-    .min(1, "El mensaje no puede estar vacío")
-    .max(5000, "El mensaje no debe exceder los 5000 caracteres"),
+    .nullable(),
   tipo: z.enum(["text", "imagen", "audio"], {
     errorMap: () => ({
       message: "El tipo debe ser 'text', 'imagen' o 'audio'",
