@@ -38,7 +38,7 @@ export default function ChatMessages({ mensajes, numero, onBack }: Props) {
     <>
       <main className="flex-1 flex flex-col bg-gray-50 p-4 overflow-y-auto">
         {/* Encabezado móvil */}
-        <div className="sm:hidden flex items-center gap-2 mb-4">
+        <div className="sm:hidden flex items-center gap-2 mb-4 px-1">
           {onBack && (
             <button
               onClick={onBack}
@@ -47,7 +47,7 @@ export default function ChatMessages({ mensajes, numero, onBack }: Props) {
               <ArrowLeft className="w-5 h-5" />
             </button>
           )}
-          <span className="text-sm font-semibold text-gray-700">
+          <span className="text-sm font-semibold text-gray-700 truncate">
             Conversación con {numero}
           </span>
         </div>
