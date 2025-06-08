@@ -36,8 +36,7 @@ export default function ChatMessages({ mensajes, numero, onBack }: Props) {
 
   return (
     <>
-      <main className="flex-1 flex flex-col bg-gray-50 p-4 overflow-y-auto">
-        {/* Encabezado móvil */}
+      <main className="flex-1 flex flex-col bg-gray-50 overflow-y-auto relative">
         {/* Encabezado móvil flotante */}
         <div className="sm:hidden sticky top-0 z-20 bg-white/90 backdrop-blur flex items-center gap-2 px-4 py-2 border-b">
           {onBack && (
@@ -53,61 +52,61 @@ export default function ChatMessages({ mensajes, numero, onBack }: Props) {
           </span>
         </div>
 
-        {/* Mensajes */}
-        {mensajesOrdenados.map((msg) => {
-          const esAdmin = msg.emisor === "admin";
-          const imagenUrl = msg.mediaUrl
-            ?.replace("C:\\subli\\subli-frontend\\public", "https://subli.cl")
-            .replace(/\\/g, "/");
+        <div className="flex flex-col gap-2 px-4 pt-2 pb-24">
+          {mensajesOrdenados.map((msg) => {
+            const esAdmin = msg.emisor === "admin";
+            const imagenUrl = msg.mediaUrl
+              ?.replace("C:\\subli\\subli-frontend\\public", "https://subli.cl")
+              .replace(/\\/g, "/");
 
-          return (
-            <div
-              key={`${msg._id}-${msg.timestamp}`}
-              className={`max-w-xs p-2 mb-2 rounded-lg text-sm ${
-                esAdmin
-                  ? "bg-cyan-100 self-end text-right"
-                  : "bg-white border self-start"
-              }`}
-            >
-              <div>
-                {msg.tipo === "audio" && msg.mediaUrl ? (
-                  <div className="flex items-center gap-3 rounded-full bg-white border px-3 py-2 max-w-[520px] shadow-sm">
-                    <audio
-                      controls
-                      className="w-screen"
-                      style={{ outline: "none", borderRadius: "10px" }}
-                    >
-                      <source
-                        src={imagenUrl}
-                        type={msg.mediaMimeType || "audio/ogg"}
-                      />
-                      Tu navegador no soporta audio.
-                    </audio>
+            return (
+              <div
+                key={`${msg._id}-${msg.timestamp}`}
+                className={`max-w-xs p-2 rounded-lg text-sm shadow-sm ${
+                  esAdmin
+                    ? "bg-cyan-100 self-end text-right"
+                    : "bg-white border self-start text-left"
+                }`}
+              >
+                <div>
+                  {msg.tipo === "audio" && msg.mediaUrl ? (
+                    <div className="flex items-center gap-3 rounded-full border px-3 py-2 max-w-[320px] bg-white">
+                      <audio
+                        controls
+                        className="w-full"
+                        style={{ outline: "none", borderRadius: "10px" }}
+                      >
+                        <source
+                          src={imagenUrl}
+                          type={msg.mediaMimeType || "audio/ogg"}
+                        />
+                        Tu navegador no soporta audio.
+                      </audio>
+                    </div>
+                  ) : msg.tipo === "image" && imagenUrl ? (
+                    <img
+                      src={imagenUrl}
+                      alt="imagen enviada"
+                      className="max-w-full rounded-md cursor-pointer hover:opacity-90 transition"
+                      onClick={() => setImagenAmpliada(imagenUrl)}
+                    />
+                  ) : (
+                    msg.mensaje
+                  )}
+                </div>
+                {msg.timestamp && (
+                  <div className="text-[10px] text-gray-400 mt-1">
+                    {new Date(msg.timestamp).toLocaleString("es-CL")}
                   </div>
-                ) : msg.tipo === "image" && imagenUrl ? (
-                  <img
-                    src={imagenUrl}
-                    alt="imagen enviada"
-                    className="max-w-full rounded-md cursor-pointer hover:opacity-90 transition"
-                    onClick={() => setImagenAmpliada(imagenUrl)}
-                  />
-                ) : (
-                  msg.mensaje
                 )}
               </div>
-              {msg.timestamp && (
-                <div className="text-[10px] text-gray-400 mt-1">
-                  {new Date(msg.timestamp).toLocaleString("es-CL")}
-                </div>
-              )}
-            </div>
-          );
-        })}
-
-        <div ref={scrollRef} />
+            );
+          })}
+          <div ref={scrollRef} />
+        </div>
       </main>
 
-      {/* 🖼 Modal de imagen ampliada */}
+      {/* Modal imagen ampliada */}
       <AnimatePresence>
         {imagenAmpliada && (
           <motion.div
