@@ -73,7 +73,12 @@ export default function ChatMessages({ mensajes, numero }: Props) {
                 </audio>
               ) : msg.tipo === "image" && msg.mediaUrl ? (
                 <img
-                  src={msg.mediaUrl}
+                  src={msg.mediaUrl
+                    .replace(
+                      "C:\\subli\\subli-frontend\\public",
+                      "https://subli.cl"
+                    )
+                    .replace(/\\/g, "/")}
                   alt="imagen enviada"
                   className="max-w-full rounded-md"
                 />
