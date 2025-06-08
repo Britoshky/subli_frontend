@@ -1,25 +1,30 @@
 "use client";
-import { useEffect, useRef } from "react";
+
+import { useEffect, useRef, useState } from "react";
 import { Mensaje } from "@/src/schema/mensaje.schema";
+import { ArrowLeft, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Props {
   mensajes: Mensaje[];
   numero: string | null;
   adminNumero: string;
+  onBack?: () => void;
 }
 
-export default function ChatMessages({ mensajes, numero }: Props) {
+export default function ChatMessages({ mensajes, numero, onBack }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [imagenAmpliada, setImagenAmpliada] = useState<string | null>(null);
 
   const mensajesOrdenados = [...mensajes].sort(
     (a, b) =>
-      new Date(a.timestamp ?? "").getTime() - new Date(b.timestamp ?? "").getTime()
+      new Date(a.timestamp ?? "").getTime() -
+      new Date(b.timestamp ?? "").getTime()
   );
 
   useEffect(() => {
-    // Scroll automático siempre que cambien los mensajes
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [mensajes, numero]); // 👈 se agrega `numero` para que funcione al cambiar de conversación
+  }, [mensajes, numero]);
 
   if (!numero) {
     return (
@@ -30,56 +35,99 @@ export default function ChatMessages({ mensajes, numero }: Props) {
   }
 
   return (
-    <main className="flex-1 flex flex-col bg-gray-50 p-4 overflow-y-auto">
-      <div className="text-center text-gray-500 mb-4">
-        Conversación con {numero}
-      </div>
+    <>
+      <main className="flex-1 flex flex-col bg-gray-50 p-4 overflow-y-auto">
+        {/* Encabezado móvil */}
+        <div className="sm:hidden flex items-center gap-2 mb-4">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="text-cyan-600 hover:text-cyan-800"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
+          <span className="text-sm font-semibold text-gray-700">
+            Conversación con {numero}
+          </span>
+        </div>
 
-      {mensajesOrdenados.map((msg) => {
-        const esAdmin = msg.emisor === "admin";
-        return (
-          <div
-            key={`${msg._id}-${msg.timestamp}`}
-            className={`max-w-xs p-2 mb-2 rounded-lg text-sm ${
-              esAdmin
-                ? "bg-cyan-100 self-end text-right"
-                : "bg-white border self-start"
-            }`}
-          >
-            <div>
-              {msg.tipo === "audio" && msg.mediaUrl ? (
-                <audio controls>
-                  <source
-                    src={msg.mediaUrl
-                      .replace("C:\\subli\\subli-frontend\\public", "https://subli.cl")
-                      .replace(/\\/g, "/")}
-                    type={msg.mediaMimeType || "audio/ogg"}
+        {/* Mensajes */}
+        {mensajesOrdenados.map((msg) => {
+          const esAdmin = msg.emisor === "admin";
+          const imagenUrl = msg.mediaUrl
+            ?.replace("C:\\subli\\subli-frontend\\public", "https://subli.cl")
+            .replace(/\\/g, "/");
+
+          return (
+            <div
+              key={`${msg._id}-${msg.timestamp}`}
+              className={`max-w-xs p-2 mb-2 rounded-lg text-sm ${
+                esAdmin
+                  ? "bg-cyan-100 self-end text-right"
+                  : "bg-white border self-start"
+              }`}
+            >
+              <div>
+                {msg.tipo === "audio" && msg.mediaUrl ? (
+                  <audio controls className="w-full">
+                    <source
+                      src={imagenUrl}
+                      type={msg.mediaMimeType || "audio/ogg"}
+                    />
+                    Tu navegador no soporta audio.
+                  </audio>
+                ) : msg.tipo === "image" && imagenUrl ? (
+                  <img
+                    src={imagenUrl}
+                    alt="imagen enviada"
+                    className="max-w-full rounded-md cursor-pointer hover:opacity-90 transition"
+                    onClick={() => setImagenAmpliada(imagenUrl)}
                   />
-                  Tu navegador no soporta la reproducción de audio.
-                </audio>
-              ) : msg.tipo === "image" && msg.mediaUrl ? (
-                <img
-                  src={msg.mediaUrl
-                    .replace("C:\\subli\\subli-frontend\\public", "https://subli.cl")
-                    .replace(/\\/g, "/")}
-                  alt="imagen enviada"
-                  className="max-w-full rounded-md"
-                />
-              ) : (
-                msg.mensaje
+                ) : (
+                  msg.mensaje
+                )}
+              </div>
+              {msg.timestamp && (
+                <div className="text-[10px] text-gray-400 mt-1">
+                  {new Date(msg.timestamp).toLocaleString("es-CL")}
+                </div>
               )}
             </div>
+          );
+        })}
 
-            {msg.timestamp && (
-              <div className="text-[10px] text-gray-400 mt-1">
-                {new Date(msg.timestamp).toLocaleString("es-CL")}
-              </div>
-            )}
-          </div>
-        );
-      })}
+        <div ref={scrollRef} />
+      </main>
 
-      <div ref={scrollRef} />
-    </main>
+      {/* 🖼 Modal de imagen ampliada */}
+      <AnimatePresence>
+        {imagenAmpliada && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setImagenAmpliada(null)}
+          >
+            <motion.img
+              src={imagenAmpliada}
+              alt="imagen ampliada"
+              className="max-w-full max-h-full rounded-lg shadow-lg"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              className="absolute top-4 right-4 text-white"
+              onClick={() => setImagenAmpliada(null)}
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
