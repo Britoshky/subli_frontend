@@ -3,6 +3,7 @@ import { verifySession } from "@/src/auth/dal";
 import { redirect } from "next/navigation";
 
 export default async function AuthRedirectPage() {
+
   const session = await verifySession();
   if (!session) {
     redirect("/auth/login");
