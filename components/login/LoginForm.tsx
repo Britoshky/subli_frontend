@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
-import Link from "next/link";
 import { loginClient } from "@/hooks/login-client";
 import { motion, type HTMLMotionProps } from "framer-motion";
 import { Loader2 } from "lucide-react"; // ícono de carga
