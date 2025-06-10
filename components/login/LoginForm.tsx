@@ -166,13 +166,6 @@ export function LoginForm({ className, ...props }: HTMLMotionProps<"form">) {
           {isSubmitting ? "Ingresando..." : "Login"}
         </Button>
       </div>
-
-      <div className="text-center text-sm text-white/50 mt-4">
-        ¿No tienes cuenta?{" "}
-        <Link href={"/auth/register"} className="text-cyan-400 hover:underline">
-          Regístrate
-        </Link>
-      </div>
     </motion.form>
   );
 }
