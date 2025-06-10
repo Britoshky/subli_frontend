@@ -9,8 +9,8 @@ const navItems = [
   { label: "Productos", href: "/productos" },
   { label: "Quiénes Somos", href: "/quienes-somos" },
   { label: "Contacto", href: "/contacto" },
+] as const;
 
-];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
