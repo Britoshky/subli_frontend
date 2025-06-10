@@ -21,7 +21,9 @@ export default function ChatLayout({
   token,
 }: Props) {
   const [mensajes, setMensajes] = useState<Mensaje[]>(mensajesIniciales);
-  const [numeroSeleccionado, setNumeroSeleccionado] = useState<string | null>(null);
+  const [numeroSeleccionado, setNumeroSeleccionado] = useState<string | null>(
+    null
+  );
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [hayNotificacion, setHayNotificacion] = useState(false);
 
@@ -61,9 +63,12 @@ export default function ChatLayout({
     };
   }, [socket]);
 
-  const recargarHistorial = useCallback((numero: string) => {
-    socket?.emit("obtener-historial", numero);
-  }, [socket]);
+  const recargarHistorial = useCallback(
+    (numero: string) => {
+      socket?.emit("obtener-historial", numero);
+    },
+    [socket]
+  );
 
   const conversaciones = mensajes.reduce<Record<string, Mensaje[]>>(
     (acc, msg) => {
@@ -82,7 +87,6 @@ export default function ChatLayout({
     ).length;
   }
 
-
   useEffect(() => {
     if (numeroSeleccionado && socket) {
       socket.emit("marcar-como-leido", numeroSeleccionado);
@@ -97,11 +101,10 @@ export default function ChatLayout({
     }
   }, [numeroSeleccionado, socket, recargarHistorial]);
 
-
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
   return (
-    <div className="flex h-screen relative overflow-hidden">
+    <div className="flex flex-col h-[100dvh] relative overflow-hidden">
       {!numeroSeleccionado && (
         <Button
           variant="ghost"
@@ -121,8 +124,13 @@ export default function ChatLayout({
 
       {/* Pantalla de lista de chats en móviles */}
       {(!numeroSeleccionado || sidebarVisible || !isMobile) && (
-        <aside className={`fixed sm:static top-0 left-0 z-50 h-full w-full sm:w-72 bg-white border-r transition-transform duration-300 ${sidebarVisible ? "translate-x-0" : "-translate-x-full sm:translate-x-0"
-          }`}>
+        <aside
+          className={`fixed sm:static top-0 left-0 z-50 h-full w-full sm:w-72 bg-white border-r transition-transform duration-300 ${
+            sidebarVisible
+              ? "translate-x-0"
+              : "-translate-x-full sm:translate-x-0"
+          }`}
+        >
           <ChatSidebar
             conversaciones={conversaciones}
             onSelect={(numero) => {
@@ -138,7 +146,9 @@ export default function ChatLayout({
       {/* Chat principal */}
       <div className="flex flex-col flex-1 bg-gray-50 overflow-hidden">
         <ChatMessages
-          mensajes={numeroSeleccionado ? conversaciones[numeroSeleccionado] : []}
+          mensajes={
+            numeroSeleccionado ? conversaciones[numeroSeleccionado] : []
+          }
           adminNumero={adminNumero}
           numero={numeroSeleccionado}
           onBack={() => {
