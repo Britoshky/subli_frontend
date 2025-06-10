@@ -5,6 +5,8 @@ import FAQ from "@/components/home/FAQ"
 import Hero from "@/components/home/Hero"
 import SeccionOfrecemos from "@/components/home/SeccionOfrecemos"
 import TestimoniosClientes from "@/components/home/TestimoniosClientes"
+import Navbar from "@/components/NavBar"
+import Footer from "@/components/Footer"
 
 export const metadata: Metadata = {
   title: "Subli | Papelería y Sublimación Personalizada en Chile",
@@ -50,11 +52,13 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
+      <Navbar />
       <Hero />
       <SeccionOfrecemos />
       <CatalogoDestacado />
       <TestimoniosClientes />
       <FAQ />
+      <Footer />
     </main>
   )
 }

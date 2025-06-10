@@ -1,6 +1,8 @@
 // app/productos/page.tsx
 import type { Metadata } from "next"
 import ProductosGrid from "@/components/productos/ProductosGrid"
+import Navbar from "@/components/NavBar"
+import Footer from "@/components/Footer"
 
 export const metadata: Metadata = {
   title: "Productos Personalizados | SUBLI",
@@ -36,6 +38,8 @@ export const metadata: Metadata = {
 
 export default function ProductosPage() {
     return (
+      <>
+      <Navbar />
       <main className="min-h-screen bg-white px-4 py-10">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold text-gray-900 mb-6 text-center">
@@ -47,5 +51,7 @@ export default function ProductosPage() {
           <ProductosGrid />
         </div>
       </main>
+      <Footer />
+      </>
     )
   }
