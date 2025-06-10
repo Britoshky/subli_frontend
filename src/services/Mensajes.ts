@@ -1,6 +1,5 @@
 import { cache } from "react";
 import getToken from "../auth/token";
-import { notFound } from "next/navigation";
 import { MensajeListSchema } from "../schema/mensaje.schema";
 
 

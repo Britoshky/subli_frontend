@@ -1,5 +1,6 @@
 import { LoginForm } from "@/components/login/LoginForm";
 import { GalleryVerticalEnd } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
     return (
@@ -7,10 +8,12 @@ export default function LoginPage() {
             <div className="relative min-h-screen flex items-center justify-center bg-transparent overflow-hidden">
                 {/* Fondo tipo videojuego */}
                 <div className="absolute inset-0 -z-10 flex items-center justify-center bg-gradient-to-br from-black via-[#0f0f1a]/80 to-[#0f0f1a]/90 overflow-hidden">
-                    <img
+                    <Image
                         src="/login/bg-login.png"
                         alt="Login background"
+                        fill
                         className="object-cover blur-sm"
+                        priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-br from-black via-[#0f0f1a]/80 to-[#0f0f1a]/90 opacity-20 backdrop-blur-md" />
                 </div>

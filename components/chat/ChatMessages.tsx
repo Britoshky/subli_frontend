@@ -116,6 +116,7 @@ export default function ChatMessages({ mensajes, numero, onBack }: Props) {
             exit={{ opacity: 0 }}
             onClick={() => setImagenAmpliada(null)}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <motion.img
               src={imagenAmpliada}
               alt="imagen ampliada"

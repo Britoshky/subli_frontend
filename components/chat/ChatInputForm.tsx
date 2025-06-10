@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Paperclip, Send, X } from "lucide-react";
 import { toast } from "sonner";
 import { sendImageAction } from "@/app/actions/send-image-action";
+import Image from "next/image";
 
 interface Props {
   numero: string;
@@ -23,7 +24,7 @@ export default function ChatInputForm({ numero, socket }: Props) {
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [_, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -109,10 +110,12 @@ export default function ChatInputForm({ numero, socket }: Props) {
 
         {previewUrl && (
           <div className="relative w-fit mt-2">
-            <img
+            <Image
               src={previewUrl}
               alt="Preview"
-              className="max-w-xs rounded-md border"
+              width={300}
+              height={300}
+              className="rounded-md border max-w-xs"
             />
             <button
               onClick={() => setPreviewUrl(null)}

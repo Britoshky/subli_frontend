@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ChatSidebar from "./ChatSidebar";
 import ChatMessages from "./ChatMessages";
 import ChatInputForm from "./ChatInputForm";
@@ -61,9 +61,9 @@ export default function ChatLayout({
     };
   }, [socket]);
 
-  const recargarHistorial = (numero: string) => {
+  const recargarHistorial = useCallback((numero: string) => {
     socket?.emit("obtener-historial", numero);
-  };
+  }, [socket]);
 
   const conversaciones = mensajes.reduce<Record<string, Mensaje[]>>(
     (acc, msg) => {
@@ -82,6 +82,7 @@ export default function ChatLayout({
     ).length;
   }
 
+
   useEffect(() => {
     if (numeroSeleccionado && socket) {
       socket.emit("marcar-como-leido", numeroSeleccionado);
@@ -94,7 +95,8 @@ export default function ChatLayout({
       );
       recargarHistorial(numeroSeleccionado);
     }
-  }, [numeroSeleccionado, socket]);
+  }, [numeroSeleccionado, socket, recargarHistorial]);
+
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
@@ -119,9 +121,8 @@ export default function ChatLayout({
 
       {/* Pantalla de lista de chats en móviles */}
       {(!numeroSeleccionado || sidebarVisible || !isMobile) && (
-        <aside className={`fixed sm:static top-0 left-0 z-50 h-full w-full sm:w-72 bg-white border-r transition-transform duration-300 ${
-          sidebarVisible ? "translate-x-0" : "-translate-x-full sm:translate-x-0"
-        }`}>
+        <aside className={`fixed sm:static top-0 left-0 z-50 h-full w-full sm:w-72 bg-white border-r transition-transform duration-300 ${sidebarVisible ? "translate-x-0" : "-translate-x-full sm:translate-x-0"
+          }`}>
           <ChatSidebar
             conversaciones={conversaciones}
             onSelect={(numero) => {
