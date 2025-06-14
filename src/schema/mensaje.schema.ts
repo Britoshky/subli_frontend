@@ -3,6 +3,7 @@ import { z } from "zod";
 // 📩 Schema de un solo mensaje adaptado al backend real
 export const MensajeSchema = z.object({
   _id: z.string().optional(), // MongoDB _id
+  nombre: z.string().optional(), // Nombre del usuario, opcional
   numero: z
     .string()
     .min(8, "El número debe tener al menos 8 caracteres")
@@ -16,7 +17,7 @@ export const MensajeSchema = z.object({
     }),
   }),
   emisor: z.string().optional(),
-  mediaUrl: z.string().url().nullable().optional(),
+  mediaUrl: z.string().nullable().optional(),
   mediaMimeType: z.string().nullable().optional(),
   timestamp: z.string().datetime().optional(),
   __v: z.number().optional(),
