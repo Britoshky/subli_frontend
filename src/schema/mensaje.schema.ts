@@ -17,7 +17,7 @@ export const MensajeSchema = z.object({
     }),
   }),
   emisor: z.string().optional(),
-  mediaUrl: z.string().optional(), // 👈 agrega esta línea
+  mediaUrl: z.string().nullable().optional(), // 👈 agrega esta línea
   mediaMimeType: z.string().nullable().optional(),
   timestamp: z.string().datetime().optional(),
   __v: z.number().optional(),
